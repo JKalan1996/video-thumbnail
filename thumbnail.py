@@ -4,17 +4,20 @@ import re
 import string
 import subprocess
 import traceback
-
+import time
 import av
+import sys
+
 from PIL import Image, ImageFont, ImageDraw
 
 # Tune these settings...
-IMAGE_PER_ROW = 5
-IMAGE_ROWS = 7
-PADDING = 5
+IMAGE_PER_ROW = 3
+IMAGE_ROWS = 4
+PADDING = 4
 FONT_SIZE = 16
-IMAGE_WIDTH = 1536
-FONT_NAME = "HelveticaNeue.ttc"
+IMAGE_WIDTH = 1920
+FONT_NAME = "./font/agencyr.ttf"
+FONT_PATH = ""
 BACKGROUND_COLOR = "#fff"
 TEXT_COLOR = "#000"
 TIMESTAMP_COLOR = "#fff"
@@ -31,7 +34,8 @@ def get_random_filename(ext):
 def create_thumbnail(filename):
     print('Processing:', filename)
 
-    jpg_name = '%s.jpg' % filename
+    timestamp = str(round(time.time()*10000000))
+    jpg_name = '%s.jpg' % ('_'.join([".".join(filename.split(".")[:-1]), timestamp]))
     if os.path.exists(jpg_name):
         print('Thumbnail assumed exists!')
         return
@@ -74,7 +78,7 @@ def create_thumbnail(filename):
 
         img = Image.new("RGB", (IMAGE_WIDTH, IMAGE_WIDTH), BACKGROUND_COLOR)
         draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype(FONT_NAME, FONT_SIZE)
+        font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
         _, min_text_height = draw.textsize("\n".join(metadata), font=font)
         image_width_per_img = int(round((IMAGE_WIDTH - PADDING) / IMAGE_PER_ROW)) - PADDING
         image_height_per_img = int(round(image_width_per_img / width * height))
@@ -95,7 +99,8 @@ def create_thumbnail(filename):
             draw.text((x + PADDING, y + PADDING), get_time_display(timestamp), TIMESTAMP_COLOR, font=font)
 
         img.save(jpg_name)
-        print('OK!')
+        print('OK! \nPlease check %s' % jpg_name)
+        container.close()
     except Exception as e:
         traceback.print_exc()
     finally:
@@ -105,6 +110,9 @@ def create_thumbnail(filename):
 
 
 if __name__ == "__main__":
+    os.chdir(sys.path[0]) #dir to this file's path
+    FONT_PATH = os.path.abspath(FONT_NAME) # set absolute path for fonts
+    
     p = input("Input the path you want to process: ")
     p = os.path.abspath(p)
 
