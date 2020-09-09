@@ -17,7 +17,7 @@ PADDING = 4
 FONT_SIZE = 16
 IMAGE_WIDTH = 1920
 FONT_NAME = "./font/agencyr.ttf"
-FONT_PATH = ""
+FONT_PATH = os.path.abspath(FONT_NAME)
 BACKGROUND_COLOR = "#fff"
 TEXT_COLOR = "#000"
 TIMESTAMP_COLOR = "#fff"
@@ -111,7 +111,8 @@ def create_thumbnail(filename):
 
 if __name__ == "__main__":
     os.chdir(sys.path[0]) #dir to this file's path
-    FONT_PATH = os.path.abspath(FONT_NAME) # set absolute path for fonts
+    # FONT_PATH = os.path.abspath(FONT_NAME) 
+    # set absolute path for fonts
     
     p = input("Input the path you want to process: ")
     p = os.path.abspath(p)
