@@ -1,5 +1,7 @@
 # Thumbnails
 
+### Succeeded from ultmaster/video-thumbnail
+
 ![](example.jpg)
 
 ## Installation
